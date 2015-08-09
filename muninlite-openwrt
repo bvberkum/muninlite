@@ -515,7 +515,7 @@ fetch_irqstats() {
   done
 }
 config_ntpdate() {
-  echo "graph_title NTP offset and dealy to peer $NTP_PEER"
+  echo "graph_title NTP offset and delay to peer $NTP_PEER"
   echo "graph_args --base 1000 --vertical-label msec"
   echo "offset.label Offset"
   echo "offset.draw LINE2"
