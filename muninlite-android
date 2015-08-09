@@ -1,0 +1,32 @@
+# report on cpu time share percentages 
+fetch_cpu() {
+	oldIFS=$IFS
+	IFS=$','
+	top -m 1 -n 1 | grep 'User [0-9]*%,' | sed 's/[^0-9,]//g' | while read user system iow irq
+	do
+		echo "user.value $user"
+		echo "system.value $system"
+		echo "iow.value $iow"
+		echo "irq.value $irq"
+	done
+	#top -m 1 -n 1 | grep 'User [0-9]*,' | sed 's/[^0-9,]//g' | while read user nice sys idle iow irw sirq
+	#do
+	#done
+	IFS=$oldIFS
+}
+# User 28%, System 15%, IOW 0%, IRQ 0%
+# User 34 + Nice 56 + Sys 48 + Idle 182 + IOW 0 + IRQ 0 + SIRQ 0 = 320
+
+
+fetch_df() {
+}
+#
+# /dev: 97044K total, 12K used, 97032K available (block size 4096)
+# /mnt/asec: 97044K total, 0K used, 97044K available (block size 4096)
+# /system: 163840K total, 122768K used, 41072K available (block size 4096)
+# /data: 277760K total, 214812K used, 62948K available (block size 4096)
+# /cache: 61440K total, 60912K used, 528K available (block size 4096)
+# /system/secro: 1152K total, 1152K used, 0K available (block size 4096)
+# /mnt/sdcard: 1915572K total, 207320K used, 1708252K available (block size 4096)
+# /mnt/secure/asec: 1915572K total, 207320K used, 1708252K available (block size 4096)
+
