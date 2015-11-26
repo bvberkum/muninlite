@@ -36,7 +36,7 @@ graph_args --upper-limit 100 -l 0
 graph_vlabel %
 graph_category disk
 graph_info This graph shows disk usage on the machine."
-  for PART in $(df -P | grep '^/' | sed '/\/[a-z0-9]*$/!d;s/.* \([a-z0-9\/]\{1,\}\)$/\1/g')
+  df -P | grep '^/' | awk '{print $6}' | while read PART
   do
     PINFO=$(df -P $PART | tail -1);
     PNAME=$(echo $PINFO | cut -d\  -f1 | sed 's/\//_/g')
@@ -47,7 +47,7 @@ graph_info This graph shows disk usage on the machine."
   done
 }
 fetch_df() {
-  for PART in $(df -P | grep '^/' | sed '/\/[a-z0-9]*$/!d;s/.* \([a-z0-9\/]\{1,\}\)$/\1/g')
+  df -P | grep '^/' | awk '{print $6}' | while read PART
   do
     PINFO=$(df -P $PART | tail -1);
     PNAME=$(echo $PINFO | cut -d\  -f1 | sed 's/[\/.-]/_/g')
