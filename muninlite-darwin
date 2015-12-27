@@ -21,7 +21,7 @@ NTP_PEER="pool.ntp.org";
 PLUGINPATTERN=$(dirname $0)"/munin-node-plugin.d/*"
 
 # Remove unwanted plugins from this list
-PLUGINS="df cpu load memory uptime users"
+PLUGINS="df df_inode cpu load memory uptime users"
 # df cpu if_ if_err_ load memory processes swap netstat uptime interrupts irqstats ntpdate plugindir_"
 # ===== LIB FUNCTIONS =====
 clean_fieldname() {
@@ -52,6 +52,37 @@ fetch_df() {
     PINFO=$(df -P $PART | tail -1);
     PNAME=$(echo $PINFO | cut -d\  -f1 | sed 's/[\/.-]/_/g')
     echo "$PNAME.value" $(echo $PINFO | cut -f5 -d\  | sed -e 's/\%//g')
+  done
+}
+
+config_df_inode() {
+  echo "graph_title Filesystem inode usage
+graph_args --logarithmic
+graph_vlabel inodes
+graph_category disk
+graph_info This graph shows fs inode usage"
+  df -P | grep '^/' | awk '{print $6}' | while read PART
+  do
+    PINFO=$(df -Pi $PART | tail -1);
+    PNAME=$(echo $PINFO | cut -d\  -f1 | sed 's/\//_/g')
+    echo "$PNAME.label $PART"
+    echo "$PNAME.info $PNAME -> $PART"
+    echo "${PNAME}_free.label $PART (free)"
+    echo "${PNAME}_free.info ${PNAME}_free -> $PART (free)"
+    echo "${PNAME}_max.label $PART (max)"
+    echo "${PNAME}_max.info ${PNAME}_max -> $PART (max)"
+  done
+}
+fetch_df_inode() {
+  df -P | grep '^/' | awk '{print $6}' | while read PART
+  do
+    PINFO=$(df -Pi $PART | tail -1);
+    PNAME=$(echo $PINFO | cut -d\  -f1 | sed 's/[\/.-]/_/g')
+    used=$(echo $PINFO | cut -f6 -d\  )
+    free=$(echo $PINFO | cut -f7 -d\  )
+    echo "$PNAME.value" $used
+    echo "${PNAME}_free.value" $free
+    echo "${PNAME}_max.value" $(( $used + $free ))
   done
 }
 
