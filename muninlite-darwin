@@ -126,7 +126,6 @@ config_cpu() {
 }
 fetch_cpu() {
   echo $(top -l1 -n0 -u|grep CPU.usage|sed 's/[a-zA-Z%,\:]//g') | while read user sys idle
-  #echo $(iostat |tail -n 1)|cut -f 4-6 -d ' '| while read user sys idle
   do
   echo "user.value" $user
   echo "system.value" $sys
