@@ -223,9 +223,9 @@ fetch_memory() {
 	do
 		echo "wired.value "$(( $wired * 1024 * 1024 ))
 		echo "active.value "$(( $active * 1024 * 1024 ))
-		echo "inactive.value "$(( $inactive * 1024 * 1024 ))
-		echo "free.value "$(( $free * 1024 * 1024 ))
-		echo "used.value "$(( $used  * 1024 * 1024 ))
+		test -z "$inactive" || echo "inactive.value "$(( $inactive * 1024 * 1024 ))
+		test -z "$free" || echo "free.value "$(( $free * 1024 * 1024 ))
+		test -z "$used" || echo "used.value "$(( $used  * 1024 * 1024 ))
 	done
 	IFS=$OLD_IFS
 }
